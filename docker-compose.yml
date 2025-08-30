@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  tg-backup:
+    build: .               # or comment this and keep 'image:' if you've prebuilt/pushed
+    image: tg-rclone:latest
+    container_name: tg-backup
+    restart: unless-stopped
+    environment:
+      API_ID: "123456"
+      API_HASH: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      TG_SESSION_STRING: "paste-your-string-session"
+      CHANNEL: "@YourChannelOrNumericChatId"
+      RCLONE_DEST: "myremote:TelegramBackup/YourChannel"
+      UPLOAD_WORKERS: "3"
+      HISTORY_LIMIT: "0"         # >0 backfills N historical messages once at startup; 0 = listen-only
+      # Optional overrides:
+      # DOWNLOAD_DIR: "/data/downloads"
+      # STATE_FILE: "/data/state.json"
+      # FAILED_FILE: "/data/failed_messages.json"
+      # LOG_FILE: "/data/logs/telegram_downloader.log"
+      # RCLONE_ARGS: "--transfers=4 --checkers=8 --contimeout=30s --low-level-retries=5 --retries=3 --stats-one-line"
+    volumes:
+      - ~/.config/rclone:/root/.config/rclone:ro
+      - ./data:/data
